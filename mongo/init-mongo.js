@@ -33,4 +33,5 @@ db.insertOne({
     nombre_archivo: 'archivo1',
     mensaje: 'Archivo de texto 1'
 });
+
 console.log('Usuario y colección creados correctamente');

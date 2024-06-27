@@ -1,1 +1,5 @@
-<p>bajar works!</p>
+<div *ngFor="let item of respuestaJson">
+    {{ item.nombre_archivo }}.{{ item.tipo_archivo }} - {{ item.mensaje }} - {{ item.archivo }}
+</div>
+
+<button (click)="cargar()">Ir a cargar</button> 

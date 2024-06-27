@@ -4,6 +4,9 @@ services:
     build: ./cargar-bajar
     ports:
       - "${APP_PORT}:${APP_PORT}"
+    environment:
+      - API_CARGAR=${API_CARGAR}
+      - API_BAJAR=${API_BAJAR}
     depends_on:
       - api
 

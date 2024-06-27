@@ -1,1 +1,11 @@
-<p>cargar works!</p>
+<form #cargarForm="ngForm" (ngSubmit)="enviarDatos(cargarForm.value)">
+    <input type="file" (change)="convertirABase64($event)" placeholder="Archivo" required>
+    <input type="text" name="mensaje" ngModel placeholder="Mensaje" required>
+    <button type="submit">Subir</button>
+</form>
+
+<div>
+    <p>Server response: {{ serverResponse }} </p>
+</div>
+
+<button (click)="descargarArchivo()">Ir a archivos cargados</button>

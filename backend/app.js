@@ -1,13 +1,42 @@
 require('dotenv').config(); // Cargar las variables de entorno
 const express = require('express');
 const { MongoClient } = require('mongodb');
+const { Binary } = require('bson');
+const cors = require('cors');
 const app = express();
+
+app.use(express.json());
+app.use(cors('*'));
 
 app.get('/', (req, res) => {
   res.send('backend de validacion de datos');
 });
 
-app.post('/cargar', (req, res) => {
+app.post('/cargar', async (req, res) => {
+  const { bin, tipo_archivo, nombre_archivo, mensaje } = req.body;
+  const client = await connectToMongo();
+  if (!client) {
+      return res.status(500).send('Error al conectar con la base de datos');
+  }
+  try {
+      console.log('Variables de ent')
+      console.log('Nombre de la base de datos:', process.env.DB_NAME);
+      console.log('Nombre de la coleccion:', process.env.DB_COLLECTION);
+
+      const db = client.db(process.env.DB_NAME);
+      const collection = db.collection(process.env.DB_COLLECTION);
+      await collection.insertOne({
+          archivo: new Binary(Buffer.from(bin, 'base64')),
+          tipo_archivo,
+          nombre_archivo,
+          mensaje
+      });
+  } catch (error) {
+      console.error('Error al cargar datos:', error);
+      res.status(500).send('Error al cargar datos');
+  } finally {
+      await client.close();
+  }
   res.send('Datos cargados');
 });
 
