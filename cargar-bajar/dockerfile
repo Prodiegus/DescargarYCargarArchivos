@@ -1,11 +1,16 @@
+# Etapa de construcción
 FROM node:14 as build-stage
 WORKDIR /app
-COPY package*.json /app/
+# Copia los archivos de configuración de npm y los instala
+COPY package*.json ./
 RUN npm install
-COPY ./ /app/
-RUN npm run build
+# Copia el resto del código fuente de la aplicación
+COPY . .
+# Construye la aplicación
+RUN npm run build --prod
 
+# Etapa de producción
 FROM nginx:stable-alpine as production-stage
-COPY --from=build-stage /app/dist/ /usr/share/nginx/html
-EXPOSE 80
+# Copia los archivos construidos desde la etapa de construcción al servidor Nginx
+COPY --from=build-stage /app/dist/* /usr/share/nginx/html
 CMD ["nginx", "-g", "daemon off;"]
