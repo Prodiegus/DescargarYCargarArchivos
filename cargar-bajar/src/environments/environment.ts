@@ -3,7 +3,7 @@
 // The list of file replacements can be found in `angular.json`.
 export const environment = {
   production: true,
-  API_CARGAR:'http://34.176.15.24:3000/cargar',
-  API_BAJAR:'http://34.176.15.24:3000/bajar'
+  API_CARGAR:'https://34.176.15.24:3000/cargar',
+  API_BAJAR:'https://34.176.15.24:3000/bajar'
 };
 
