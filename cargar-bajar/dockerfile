@@ -9,6 +9,9 @@ COPY . .
 RUN npm run build --prod
 
 FROM nginx:stable-alpine as production-stage
+
+ENV NODE_TLS_REJECT_UNAUTHORIZED=0
+
 COPY --from=build-stage /app/dist/* /usr/share/nginx/html
 
 COPY localhost.crt /etc/nginx/ssl/localhost.crt
