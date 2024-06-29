@@ -3,10 +3,12 @@ const express = require('express');
 const { MongoClient } = require('mongodb');
 const { Binary } = require('bson');
 const cors = require('cors');
+const fs = require('fs');
+const https = require('https');
 const app = express();
   
 app.use(cors({
-    origin: ['https://localhost:*', 'https://34.176.15.24:*', 'api:*', 'app:*'], 
+    origin: '*', 
     methods: ['GET', 'POST', 'OPTIONS'], 
     allowedHeaders: '*'
 }));
