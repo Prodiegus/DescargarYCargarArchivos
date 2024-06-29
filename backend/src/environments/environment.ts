@@ -4,7 +4,7 @@
 
 export const environment = {
   production: false,
-  API_CARGAR:'34.176.15.24:3000/cargar',
-  API_BAJAR:'34.176.15.24:3000/bajar'
+  API_CARGAR:'http://localhost:3000/cargar',
+  API_BAJAR:'http://localhost:3000/bajar'
 };
 

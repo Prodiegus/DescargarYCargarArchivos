@@ -27,11 +27,5 @@ db.createCollection('archivos', {
         }
     }
 });
-db.insertOne({
-    archivo: new BinData(0, 'AAECAwQFBgcICQoLDA0ODw=='),
-    tipo_archivo: 'txt',
-    nombre_archivo: 'archivo1',
-    mensaje: 'Archivo de texto 1'
-});
 
 console.log('Usuario y colección creados correctamente');

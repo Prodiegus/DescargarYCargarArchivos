@@ -1,0 +1,30 @@
+<div class="container-fluid w-100 m-0 p-0">
+    <div class="row w-100 d-flex justify-content-center text-center">
+        <h1>CargarBajar</h1>
+        <p>
+            Aqui puedes bajar y subir cualquier tipo de archivo
+        </p>
+    </div>
+    <div class="row mb-3">
+        <div class="container d-flex justify-content-center align-items-center">
+            <button class="btn btn-primary" (click)="cargar()">Cargar un archivo</button>
+        </div>
+    </div>
+    <div class="row m-0 w-100 d-flex  justify-content-center align-items-center">
+        <div class="w-75 row CONTAINER background border" *ngFor="let item of respuestaJson">
+            <div class="row mt-3 broder-bottom">
+                <div class="col">
+                    <h3> {{ item.nombre_archivo }} </h3>
+                </div>
+                <div class="col">
+                    <button class="btn btn-success" (click)="descargarArchivo(item.archivo, item.nombre_archivo, item.tipo_archivo)">Descargar</button>
+                </div>
+            </div>
+            <div class="row">
+                <p> {{ item.mensaje }} </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+

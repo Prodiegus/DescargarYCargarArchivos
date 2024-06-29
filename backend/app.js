@@ -4,9 +4,20 @@ const { MongoClient } = require('mongodb');
 const { Binary } = require('bson');
 const cors = require('cors');
 const app = express();
+  
+app.use(cors({
+    origin: ['https://localhost:*', 'https://34.176.15.24:*', 'api:*', 'app:*'], 
+    methods: ['GET', 'POST', 'OPTIONS'], 
+    allowedHeaders: '*'
+}));
+  
+const privateKey = fs.readFileSync('localhost.key', 'utf8');
+const certificate = fs.readFileSync('localhost.crt', 'utf8');
+const credentials = { key: privateKey, cert: certificate };
+  
+const httpsServer = https.createServer(credentials, app);
 
 app.use(express.json({ limit: '50mb'}));
-app.use(cors('*'));
 
 app.get('/', (req, res) => {
   res.send('backend de validacion de datos');
