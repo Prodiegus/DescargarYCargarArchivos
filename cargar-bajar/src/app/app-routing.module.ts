@@ -4,8 +4,8 @@ import { CargarComponent } from './cargar/cargar.component';
 import { BajarComponent } from './bajar/bajar.component';
 
 const routes: Routes = [
-  { path: '', component: CargarComponent },
-  { path: 'bajar', component: BajarComponent},
+  { path: 'cargar', component: CargarComponent },
+  { path: '', component: BajarComponent},
   { path: '*', redirectTo: ''}
 
 ];

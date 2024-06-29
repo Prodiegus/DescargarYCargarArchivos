@@ -30,10 +30,15 @@ export class CargarComponent implements OnInit {
     this.http.post(url, datos, {
       headers: {
         'Content-Type': 'application/json'
-      }
+      },
+      observe: 'response' 
     }).subscribe({
-      next: () => this.serverResponse = "archivo subido correctamente",
-      error: () => this.serverResponse = "error al subir el archivo"
+      next: (response) => {
+        if (response.status === 200 && response.ok) {
+          this.serverResponse = "Archivo subido correctamente";
+          alert("Archivo subido correctamente.");
+        } 
+      }
     });
   }
 
@@ -42,15 +47,21 @@ export class CargarComponent implements OnInit {
     if (archivo) {
       const reader = new FileReader();
       reader.onload = (e: any) => {
-        const base64 = e.target.result;
+        let base64 = e.target.result;
+        const base64Pattern = /^data:.*?;base64,(.*)$/;
+        const matches = base64.match(base64Pattern);
+        if (matches) {
+          base64 = matches[1];
+        }
         this.archivo = base64;
         this.nombre = archivo.name;
         this.tipo = archivo.type;
+        alert(`El archivo ${archivo.name} ha sido procesado.`);
       };
       reader.readAsDataURL(archivo);
     }
   }
   descargarArchivo(): void {
-    this.router.navigate(['/bajar']);
+    this.router.navigate(['/']);
   }
 }
