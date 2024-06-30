@@ -17,7 +17,9 @@ const privateKey = fs.readFileSync('localhost.key', 'utf8');
 const certificate = fs.readFileSync('localhost.crt', 'utf8');
 const credentials = { key: privateKey, cert: certificate };
   
-const httpsServer = https.createServer(credentials, app);
+https.createServer(credentials, app).listen(process.env.PORT, () => {
+    console.log(`Servidor corriendo en el puerto ${process.env.PORT}`);
+});
 
 app.use(express.json({ limit: '50mb'}));
 
@@ -91,6 +93,3 @@ async function connectToMongo() {
       console.error('Error al conectar a MongoDB:', error);
   }
 }
-
-const PORT = process.env.PORT;
-app.listen(PORT, () => console.log(`Servidor corriendo en el puerto ${PORT}`));
