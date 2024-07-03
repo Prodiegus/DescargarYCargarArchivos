@@ -5,12 +5,13 @@ const { Binary } = require('bson');
 const cors = require('cors');
 const fs = require('fs');
 const https = require('https');
+const fileType = require('file-type');
 const app = express();
-let fileType;
+/*let fileType;
 
 (async () => {
     fileType = (await import('file-type')).default;
-})();
+})();*/
   
 app.use(cors({
     origin: '*', 
