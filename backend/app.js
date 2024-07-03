@@ -6,6 +6,11 @@ const cors = require('cors');
 const fs = require('fs');
 const https = require('https');
 const app = express();
+let fileType;
+
+(async () => {
+    fileType = (await import('file-type')).default;
+})();
   
 app.use(cors({
     origin: '*', 
@@ -28,29 +33,43 @@ app.get('/', (req, res) => {
 });
 
 app.post('/cargar', async (req, res) => {
+  if (!req.body || !req.body.bin || !req.body.tipo_archivo || !req.body.nombre_archivo || !req.body.mensaje) {
+    return res.status(400).send('Faltan datos');
+  }
+  if (!fileType){
+    return res.status(500).send('Error al cargar el módulo file-type');
+  }
   const { bin, tipo_archivo, nombre_archivo, mensaje } = req.body;
+  const buffer = Buffer.from(bin, 'base64');
+
+  const tipoReal = await fileType.fromBuffer(buffer);
+
+  if (!tipoReal || tipoReal.mime !== tipo_archivo) {
+    return res.status(400).send('Tipo de archivo no permitido.');
+  }
+
   const client = await connectToMongo();
   if (!client) {
-      return res.status(500).send('Error al conectar con la base de datos');
+    return res.status(500).send('Error al conectar con la base de datos');
   }
   try {
-      console.log('Variables de ent')
-      console.log('Nombre de la base de datos:', process.env.DB_NAME);
-      console.log('Nombre de la coleccion:', process.env.DB_COLLECTION);
+    console.log('Variables de ent');
+    console.log('Nombre de la base de datos:', process.env.DB_NAME);
+    console.log('Nombre de la coleccion:', process.env.DB_COLLECTION);
 
-      const db = client.db(process.env.DB_NAME);
-      const collection = db.collection(process.env.DB_COLLECTION);
-      await collection.insertOne({
-          archivo: new Binary(Buffer.from(bin, 'base64')),
-          tipo_archivo,
-          nombre_archivo,
-          mensaje
-      });
+    const db = client.db(process.env.DB_NAME);
+    const collection = db.collection(process.env.DB_COLLECTION);
+    await collection.insertOne({
+      archivo: new Binary(buffer),
+      tipo_archivo,
+      nombre_archivo,
+      mensaje
+    });
   } catch (error) {
-      console.error('Error al cargar datos:', error);
-      res.status(500).send('Error al cargar datos');
+    console.error('Error al cargar datos:', error);
+    res.status(500).send('Error al cargar datos');
   } finally {
-      await client.close();
+    await client.close();
   }
   res.send('Datos cargados');
 });

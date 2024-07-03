@@ -25,7 +25,7 @@ export class CargarComponent implements OnInit {
       bin: this.archivo,
       nombre_archivo: this.nombre,
       tipo_archivo: this.tipo,
-      mensaje: data.mensaje
+      mensaje: this.sanitizeInput(data.mensaje)
     };
     this.http.post(url, datos, {
       headers: {
@@ -45,6 +45,14 @@ export class CargarComponent implements OnInit {
   convertirABase64(event: any): void {
     const archivo = event.target.files[0];
     if (archivo) {
+      const tamanoMaximo = 50 * 1024 * 1024; // 50MB
+
+      // Validar el tamaño del archivo
+      if (archivo.size > tamanoMaximo) {
+        alert('El archivo excede el tamaño máximo permitido.');
+        return;
+      }
+
       const reader = new FileReader();
       reader.onload = (e: any) => {
         let base64 = e.target.result;
@@ -54,13 +62,24 @@ export class CargarComponent implements OnInit {
           base64 = matches[1];
         }
         this.archivo = base64;
-        this.nombre = archivo.name;
+        this.nombre = this.clearFileName(archivo.name);
         this.tipo = archivo.type;
         alert(`El archivo ${archivo.name} ha sido procesado.`);
       };
       reader.readAsDataURL(archivo);
     }
   }
+
+  clearFileName(fileName: string): string {
+    return fileName.replace(/[^a-z0-9]/gi, '_').toLowerCase();
+  }
+
+  sanitizeInput(input: string): string {
+    // Reemplaza caracteres peligrosos con entidades HTML o simplemente elimínalos
+    return input.replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+  }
+
+
   descargarArchivo(): void {
     this.router.navigate(['/']);
   }
